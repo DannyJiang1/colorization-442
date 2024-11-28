@@ -4,6 +4,7 @@ import numpy as np
 from skimage import color
 import torch
 import torch.nn.functional as F
+import torch.nn as nn
 from IPython import embed
 
 def load_img(img_path):
@@ -45,3 +46,13 @@ def postprocess_tens(tens_orig_l, out_ab, mode='bilinear'):
 
 	out_lab_orig = torch.cat((tens_orig_l, out_ab_orig), dim=1)
 	return color.lab2rgb(out_lab_orig.data.cpu().numpy()[0,...].transpose((1,2,0)))
+
+def normal_init(m, mean, std):
+  """
+  Helper function. Initialize model parameter with given mean and std.
+  """
+  if isinstance(m, nn.ConvTranspose2d) or isinstance(m, nn.Conv2d):
+    # delete start
+    m.weight.data.normal_(mean, std)
+    m.bias.data.zero_()
+    # delete end
