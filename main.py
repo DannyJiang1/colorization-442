@@ -41,6 +41,15 @@ def main():
         action="store_true",
         help="Use GPU for training if available",
     )
+
+    parser.add_argument(
+        "--checkpoint",
+        type=str,
+        required=False,
+        default=None,
+        help="Checkpoint .pt file if applicable",
+    )
+
     args = parser.parse_args()
 
     HW = (args.image_size, args.image_size)
@@ -52,9 +61,16 @@ def main():
         lr=args.lr,
         HW=HW,
         use_gpu=args.use_gpu,
+        checkpoint_path=args.checkpoint,
     )
 
 
 if __name__ == "__main__":
     main()
-# python main.py --train_dir data/tiny-imagenet-200/centralized_train_images/ --val_dir data/tiny-imagenet-200/val/images/ --epochs 10 --batch_size 16 --lr 0.0002 --image_size 256 --use_gpu
+
+
+# If no checkpoint:
+# python main.py --train_dir data/landscape_images/train/ --val_dir data/landscape_images/val/ --epochs 50 --batch_size 16 --lr 0.0002 --image_size 256 --use_gpu
+
+# If checkpoint:
+# python main.py --train_dir data/landscape_images/train/ --val_dir data/landscape_images/val/ --epochs 50 --batch_size 16 --lr 0.0002 --image_size 256 --use_gpu --checkpoint checkpoints/latest_checkpoint.pt
