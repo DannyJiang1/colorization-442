@@ -4,10 +4,14 @@ Run:
 1)
 kaggle datasets download -d theblackmamba31/landscape-image-colorization
 2)
-!unzip /content/landscape-image-colorization.zip
+unzip landscape-image-colorization.zip
 3)
-rename delete the gray folder, rename the color folder to 'train'
+rm landscape-image-colorization.zip 
 4)
-create folder named 'val'
+mv 'landscape Images' landscape_images
 5)
+rename delete the gray folder, rename the color folder to 'train'
+6)
+create folder named 'val'
+7)
 run split_landscape_images.sh

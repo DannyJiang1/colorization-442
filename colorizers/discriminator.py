@@ -10,21 +10,26 @@ class discriminator(nn.Module):
         super(discriminator, self).__init__()
         self.layer1 = nn.Sequential(
             nn.Conv2d(3, 64, 4, 2, 1),
+            nn.Dropout2d(0.3),
         )
 
         self.layer2 = nn.Sequential(
             nn.Conv2d(64, 128, 4, 2, 1),
             nn.BatchNorm2d(128),
+            nn.Dropout2d(0.3),
         )
+        
 
         self.layer3 = nn.Sequential(
             nn.Conv2d(128, 256, 4, 2, 1),
             nn.BatchNorm2d(256),
+            nn.Dropout2d(0.3),
         )
 
         self.layer4 = nn.Sequential(
             nn.Conv2d(256, 512, 4, 1, 1),
             nn.BatchNorm2d(512),
+            nn.Dropout2d(0.3),
         )
 
         self.final = nn.Sequential(nn.Conv2d(512, 1, 4, 1, 1))

@@ -8,3 +8,4 @@ tqdm
 IPython
 requests
 torchvision
+kaggle

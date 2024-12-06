@@ -71,7 +71,8 @@ def train_disc(generator, disc, tens_l_rs, tens_ab_rs, optimizer_disc, device):
     disc_real = disc(real_img)
 
     # Create real and fake labels
-    real_labels = torch.ones(disc_real.size(), device=device)
+    # real_labels = torch.ones(disc_real.size(), device=device)
+    real_labels = torch.full(disc_fake.size(), 0.9, device=device)
     fake_labels = torch.zeros(disc_fake.size(), device=device)
 
     criterion_bce = torch.nn.BCELoss()
@@ -104,8 +105,8 @@ def train_gen(generator, disc, tens_l_rs, tens_ab_rs, optimizer_gen, device):
     # Compute generator loss (adversarial + pixel loss)
     loss_gen_adv = criterion_bce(disc_fake, real_labels)
     loss_gen_pixel = criterion_mse(pred_ab, tens_ab_rs)
-    loss_gen = loss_gen_adv + loss_gen_pixel
-
+    # loss_gen = loss_gen_adv + loss_gen_pixel
+    loss_gen = 0.001 * loss_gen_adv + loss_gen_pixel
     # Backprop and optimize generator
     optimizer_gen.zero_grad()
     loss_gen.backward()
@@ -142,7 +143,7 @@ def train_colorization(
 
     # Initialize optimizers
     optimizer_gen = Adam(generator.parameters(), lr=lr, betas=(0.5, 0.999))
-    optimizer_disc = Adam(disc.parameters(), lr=lr, betas=(0.5, 0.999))
+    optimizer_disc = Adam(disc.parameters(), lr=(0.5*lr), betas=(0.5, 0.999))
 
     criterion_mse = torch.nn.MSELoss()
 
