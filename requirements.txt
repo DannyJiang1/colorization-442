@@ -9,3 +9,4 @@ IPython
 requests
 torchvision
 kaggle
+lpips

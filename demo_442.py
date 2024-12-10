@@ -5,7 +5,7 @@ from colorizers import *
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    "-i", "--img_path", type=str, default="imgs/ansel_adams3.jpg"
+    "-i", "--img_path", type=str, default="imgs/ansel_adams.jpg"
 )
 parser.add_argument(
     "--use_gpu", action="store_true", help="whether to use GPU"
@@ -20,9 +20,9 @@ parser.add_argument(
 opt = parser.parse_args()
 
 # load colorizers
-colorizer_eccv16 = eccv16(pretrained=False)
-state_dict = torch.load("colorization_generator.pth")
-colorizer_eccv16.load_state_dict(state_dict)
+colorizer_eccv16 = eccv16()
+# state_dict = torch.load("colorization_generator.pth")
+# colorizer_eccv16.load_state_dict(state_dict)
 colorizer_eccv16.eval()
 if opt.use_gpu:
     colorizer_eccv16.cuda()

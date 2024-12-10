@@ -4,10 +4,10 @@ import torch
 from . import util
 
 
-class discriminator(nn.Module):
+class Discriminator(nn.Module):
     # initializers
     def __init__(self):
-        super(discriminator, self).__init__()
+        super(Discriminator, self).__init__()
         self.layer1 = nn.Sequential(
             nn.Conv2d(3, 64, 4, 2, 1),
             nn.Dropout2d(0.3),

@@ -3,12 +3,14 @@ from torch.optim import Adam
 from tqdm import tqdm
 from .data_loader import get_data_loader
 from .eccv16 import ECCVGenerator
-from .discriminator import discriminator
+from .discriminator import Discriminator
+from .generator import Generator
 from .util import postprocess_tens, preprocess_img, load_img
 from PIL import Image
 import os
 import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
+import lpips
 
 
 def visualize_hardcoded_image(
@@ -101,12 +103,19 @@ def train_gen(generator, disc, tens_l_rs, tens_ab_rs, optimizer_gen, device):
 
     criterion_bce = torch.nn.BCELoss()
     criterion_mse = torch.nn.MSELoss()
+    criterion_lpips = lpips.LPIPS(net='alex').to(device)
 
     # Compute generator loss (adversarial + pixel loss)
     loss_gen_adv = criterion_bce(disc_fake, real_labels)
     loss_gen_pixel = criterion_mse(pred_ab, tens_ab_rs)
+
+    # fake_img_rgb = torch.cat((tens_l_rs, pred_ab), dim=1)       # Predicted (L + ab)
+    # real_img_rgb = torch.cat((tens_l_rs, tens_ab_rs), dim=1)    # Ground truth (L + ab)
+    # loss_gen_lpips = criterion_lpips(fake_img_rgb, real_img_rgb)
+
     # loss_gen = loss_gen_adv + loss_gen_pixel
-    loss_gen = 0.001 * loss_gen_adv + loss_gen_pixel
+    loss_gen = 0.01 * loss_gen_adv + loss_gen_pixel
+    # loss_gen = 0.01 * loss_gen_adv + loss_gen_lpips
     # Backprop and optimize generator
     optimizer_gen.zero_grad()
     loss_gen.backward()
@@ -138,8 +147,8 @@ def train_colorization(
     )
 
     # Initialize models and optimizers
-    generator = ECCVGenerator().to(device)
-    disc = discriminator().to(device)
+    generator = Generator().to(device)
+    disc = Discriminator().to(device)
 
     # Initialize optimizers
     optimizer_gen = Adam(generator.parameters(), lr=lr, betas=(0.5, 0.999))
